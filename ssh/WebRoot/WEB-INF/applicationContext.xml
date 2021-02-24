@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:aop="http://www.springframework.org/schema/aop" xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+						http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-2.5.xsd
+						http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-2.5.xsd">
+
+	<!-- 配置事务管理类 -->
+	<bean id="transactionManager"
+		class="org.springframework.orm.hibernate3.HibernateTransactionManager">
+		<property name="sessionFactory" ref="sessionFactory" />
+	</bean>
+
+	<!-- 事务的传播特性 -->
+	<!--<tx:advice id="allAdvice" transaction-manager="transactionManager">
+		<tx:attributes>
+			<tx:method name="save*" propagation="REQUIRED" />
+			<tx:method name="del*" propagation="REQUIRED" />
+			<tx:method name="*" read-only="true" />
+		</tx:attributes>
+	</tx:advice>
+-->
+	<!-- 配置切面，指定哪些类中的哪些方法要被切入 -->
+	<!--<aop:config>
+		<aop:pointcut id="allPoincut" expression="execution(* com.niit.service.imp.*.*(..))" />
+		<aop:advisor advice-ref="allAdvice" pointcut-ref="allPoincut" />
+	</aop:config>
+
+	--><bean id="sessionFactory"
+		class="org.springframework.orm.hibernate3.LocalSessionFactoryBean">
+		<property name="configLocation" value="classpath:hibernate.cfg.xml">
+		</property>
+	</bean>
+	<bean id="StudentDAO" class="com.niit.dao.imp.StudentDAO">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+	<bean id="StudentService" class="com.niit.service.imp.StudentServiceImp">
+		<property name="studentDAO" ref="StudentDAO"></property>
+	</bean>
+	<bean id="StudentAction" class="com.niit.action.StudentAction">
+		<property name="iStudentService" ref="StudentService"></property>
+	</bean>
+</beans>
